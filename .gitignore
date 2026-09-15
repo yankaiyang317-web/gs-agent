@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.cache/
+.mcp_runtime/
+.idea/
+
+outputs/*
+!outputs/README.md
+!outputs/archive/
+outputs/archive/*
+
+test_data/

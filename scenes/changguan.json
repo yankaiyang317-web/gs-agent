@@ -1,0 +1,29 @@
+{
+  "name": "changguan",
+  "ply": "../test_data/changguan/changguan.ply",
+  "collision_mesh": "../test_data/changguan/changguan_v060.collision.glb",
+  "initial_pose": {
+    "position": [43.54, 134.68, 490.06],
+    "quaternion_wxyz": [-0.08049241827469476, -0.008642316926954352, 0.9910219183784064, -0.10640412704406296]
+  },
+  "world_up": [0.0, -1.0, 0.0],
+  "camera": {
+    "width": 320,
+    "height": 240,
+    "fx": 160.0,
+    "fy": 120.0,
+    "cx": 160.0,
+    "cy": 120.0
+  },
+  "collision": {
+    "camera_radius": 0.25,
+    "camera_body_height": 0.9,
+    "step": 0.02,
+    "world_to_asset": [
+      [-1.0, 0.0, 0.0, 0.0],
+      [0.0, -1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ]
+  }
+}

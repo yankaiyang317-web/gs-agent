@@ -1,0 +1,28 @@
+{
+  "name": "laojie",
+  "ply": "../test_data/laojie/nl039zwl.ply",
+  "collision_mesh": "../test_data/laojie/nl039zwl_v006.collision.glb",
+  "initial_pose": {
+    "position": [-0.76, -9.38, -23.68],
+    "quaternion_wxyz": [0.99453749, -0.08831364, 0.05542261, 0.00492146]
+  },
+  "camera": {
+    "width": 320,
+    "height": 240,
+    "fx": 160.0,
+    "fy": 120.0,
+    "cx": 160.0,
+    "cy": 120.0
+  },
+  "collision": {
+    "camera_radius": 0.25,
+    "camera_body_height": 0.9,
+    "step": 0.02,
+    "world_to_asset": [
+      [-1.0, 0.0, 0.0, 0.0],
+      [0.0, -1.0, 0.0, 0.0],
+      [0.0, 0.0, 1.0, 0.0],
+      [0.0, 0.0, 0.0, 1.0]
+    ]
+  }
+}

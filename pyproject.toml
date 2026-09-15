@@ -1,0 +1,26 @@
+[project]
+name = "gs-agent"
+version = "0.1.0"
+description = "Headless 3D Gaussian Splatting Agent exploration environment"
+requires-python = ">=3.10"
+dependencies = [
+    "gsplat==1.5.3",
+    "mcp>=1.0,<2.0",
+    "numpy>=1.26",
+    "coal==3.0.3; platform_system == 'Linux'",
+    "Pillow>=10.0",
+    "plyfile>=1.1",
+    "torch>=2.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+]
+
+[tool.setuptools.packages.find]
+include = ["gs_env*", "gs_mcp*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-p", "no:cacheprovider"]

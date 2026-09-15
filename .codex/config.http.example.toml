@@ -1,0 +1,5 @@
+# Connect to any running gs-agent Streamable HTTP server.
+# If the service is remote and loopback-only, create an SSH tunnel separately.
+[mcp_servers.gs_agent]
+url = "http://127.0.0.1:18913/mcp"
+startup_timeout_sec = 300

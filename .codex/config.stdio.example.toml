@@ -1,0 +1,13 @@
+# Start a local gs-agent MCP process for one scene.
+# Replace the manifest path with an absolute path on your machine.
+[mcp_servers.gs_agent]
+command = "python"
+args = [
+  "-m",
+  "gs_mcp.server",
+  "--scene-manifest",
+  "/absolute/path/to/gs-agent/scenes/guju.json",
+  "--exploration-campaign",
+  "/absolute/path/to/gs-agent/outputs/exploration_runs",
+]
+startup_timeout_sec = 300
