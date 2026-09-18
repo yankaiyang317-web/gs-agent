@@ -41,7 +41,7 @@ on another host.
 
 Start the server:
 
-The port is configurable. `18913` is the application default, not an MCP requirement. Replace `<PORT>` below with any available port and use the same value in the client URL.
+The port is configurable. `8000` is the application default, not an MCP requirement. Replace `<PORT>` below with any available port and use the same value in the client URL.
 
 ```bash
 python -m gs_mcp.runtime_server \

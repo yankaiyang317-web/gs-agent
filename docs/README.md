@@ -10,7 +10,7 @@ Maintained current documentation:
 - [Coverage exploration memory](exploration-memory.md)
 - [Scene manifests](scene-manifests.md)
 - [Development notes](development/README.md)
-- [Prompt system](prompt-system.md)
+- [Prompt architecture and source map](prompt-system.md)
 - [Agent Harness](harness.md)
 - [Agent integration guide](agent/README.md)
 - [Optional Agent task templates](agent/task_templates.md)

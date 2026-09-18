@@ -23,7 +23,7 @@ The project is installed as a normal Python environment. Docker is not required.
 
 | Concept | Current status | Documentation |
 | --- | --- | --- |
-| Prompt | Implemented through `AGENTS.md`, task templates, and MCP tool descriptions. | [Prompt system](docs/prompt-system.md) |
+| Prompt | Implemented through `AGENTS.md`, task templates, and MCP tool descriptions. | [Prompt architecture and source map](docs/prompt-system.md) |
 | Harness | Explicit `GSAgentHarness` lifecycle boundary over the runtime, Campaign, tools, and persistence. | [Harness architecture](docs/harness.md) |
 
 The model loop is hosted by an MCP client such as Codex. gs-agent provides the
@@ -206,7 +206,7 @@ gs_configure_campaign(video_clips=1, objective="coverage")
 Use HTTP when the renderer should remain alive independently of the client or
 runs on another host:
 
-`18913` is only the application default, not an MCP requirement. Replace `<PORT>` with any available port and use the same value in the server command and client URL.
+`8000` is only the application default, not an MCP requirement. Replace `<PORT>` with any available port and use the same value in the server command and client URL.
 
 ```bash
 python -m gs_mcp.runtime_server \

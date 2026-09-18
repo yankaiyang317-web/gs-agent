@@ -1,4 +1,12 @@
-# Prompt system
+# Prompt architecture and source map
+
+## What this document is
+
+This page is documentation and a source map. It is **not** a monolithic prompt copied verbatim into every Agent session, and reading this page alone does not activate its rules.
+
+The repository-level instructions that Codex can apply directly are in [`AGENTS.md`](../AGENTS.md). MCP tool names, schemas, and docstrings are supplied automatically by the connected MCP server. The current user request supplies task-specific intent. Templates in [`docs/agent/task_templates.md`](agent/task_templates.md) are optional text: they affect a run only when a user or client selects, copies, or injects one.
+
+Use this page to understand and audit the Prompt system; use `AGENTS.md` and MCP tool descriptions as the maintained executable instruction sources.
 
 ## Purpose
 

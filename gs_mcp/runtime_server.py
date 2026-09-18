@@ -19,7 +19,7 @@ def main() -> None:
     parser.add_argument("--max-navigation-actions", type=int, default=0)
     parser.add_argument("--blocked-retry-limit", type=int, default=2)
     parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=18913)
+    parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
     runtime = SceneRuntime(
         args.scenes_root,

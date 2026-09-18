@@ -1,6 +1,6 @@
-# 18913 is an example/default; match the port used by gs_mcp.runtime_server.
+# 8000 is an example/default; match the port used by gs_mcp.runtime_server.
 # Connect to any running gs-agent Streamable HTTP server.
 # If the service is remote and loopback-only, create an SSH tunnel separately.
 [mcp_servers.gs_agent]
-url = "http://127.0.0.1:18913/mcp"
+url = "http://127.0.0.1:8000/mcp"
 startup_timeout_sec = 300
