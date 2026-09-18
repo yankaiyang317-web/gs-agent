@@ -121,6 +121,24 @@ class SceneRuntime:
             scenes.append(item)
         return {"scenes": scenes, "loaded_scene": None if self.current is None else self.current.key}
 
+    def describe_scene(self, scene: str) -> dict[str, Any]:
+        """Validate one registered manifest without allocating GPU resources."""
+        key = scene.strip()
+        if not _SCENE_NAME.fullmatch(key):
+            raise ValueError("scene must contain only letters, numbers, underscore, or hyphen")
+        manifest_path = (self.scenes_root / f"{key}.json").resolve()
+        if manifest_path.parent != self.scenes_root or not manifest_path.is_file():
+            raise ValueError(f"scene manifest not found: {key}")
+        manifest = load_scene_manifest(manifest_path)
+        return {
+            "scene": key,
+            "name": manifest.name,
+            "available": True,
+            "has_collision_mesh": manifest.collision_mesh_path is not None,
+            "camera": {"width": manifest.intrinsics.width, "height": manifest.intrinsics.height},
+            "profiles": sorted(CAMPAIGN_PROFILES),
+        }
+
     def load_scene(
         self,
         scene: str,
@@ -134,7 +152,7 @@ class SceneRuntime:
         key = scene.strip()
         if not _SCENE_NAME.fullmatch(key):
             raise ValueError("scene must contain only letters, numbers, underscore, or hyphen")
-        settings = self._campaign_settings(profile, width, height, video_segment_frames, video_fps)
+        settings = self.campaign_settings(profile, width, height, video_segment_frames, video_fps)
         manifest_path = (self.scenes_root / f"{key}.json").resolve()
         if manifest_path.parent != self.scenes_root or not manifest_path.is_file():
             raise ValueError(f"scene manifest not found: {key}")
@@ -262,7 +280,7 @@ class SceneRuntime:
             "campaign": current.campaign.status(),
         }
 
-    def _campaign_settings(
+    def campaign_settings(
         self,
         profile: str,
         width: int | None,

@@ -25,7 +25,7 @@ The project is installed as a normal Python environment. Docker is not required.
 | --- | --- | --- |
 | Prompt | Implemented through `AGENTS.md`, task templates, and MCP tool descriptions. | [Prompt system](docs/prompt-system.md) |
 | Skill | Reusable workflows exist, but no formal `SKILL.md` package is enabled yet. | [Skill status](docs/skill-system.md) |
-| Harness | Implemented across the MCP runtime, environment tools, Campaign state, safety checks, persistence, and tests. | [Harness architecture](docs/harness.md) |
+| Harness | Explicit `GSAgentHarness` lifecycle boundary over the runtime, Campaign, tools, and persistence. | [Harness architecture](docs/harness.md) |
 
 The model loop is hosted by an MCP client such as Codex. gs-agent provides the
 environment-side Harness: it exposes observations and actions, validates tool
@@ -259,6 +259,8 @@ gs_configure_campaign(
 ```
 
 See the [generic MCP connection guide](docs/mcp-connection.md).
+The persistent server exposes read-only discovery/status tools separately from task execution. Navigation calls are accepted only while the Harness is `active`; an identical configure request is idempotent, while an incompatible unfinished Campaign is rejected without replacing or deleting it.
+
 
 ## 6. Run an Agent task
 

@@ -56,6 +56,9 @@ class CampaignBase:
             self.state = {
                 "version": 2,
                 "created_at": datetime.now().isoformat(timespec="seconds"),
+                "lifecycle_status": "active",
+                "ended_at": None,
+                "end_reason": None,
                 "world_up": initial_up.tolist(),
                 "heading_forward": initial_heading.tolist(),
                 "target_video_clips": target_video_clips,
@@ -69,6 +72,9 @@ class CampaignBase:
                 "route_candidates": [],
             }
         self.state.setdefault("route_candidates", [])
+        self.state.setdefault("lifecycle_status", "active")
+        self.state.setdefault("ended_at", None)
+        self.state.setdefault("end_reason", None)
         # Old campaigns keep their historical 81-frame/9 FPS format. For an
         # existing campaign the persisted format is authoritative, regardless
         # of current process defaults or CLI arguments.
@@ -159,7 +165,29 @@ class CampaignBase:
             if self.target_frames is not None and index + 1 >= self.target_frames:
                 if not wait_for_completed_clip(self.root, clip_index):
                     raise RuntimeError(f"final exploration clip {clip_index:03d} did not finish encoding")
+                self.mark_lifecycle("completed", "target_video_clips_reached")
         return True
+
+    def set_run_metadata(self, *, scene: str, objective: str) -> None:
+        """Persist the task identity used by runtime lifecycle checks."""
+        self.state["scene"] = scene
+        self.state["exploration_objective"] = objective
+        self.state["lifecycle_status"] = "active"
+        self.state["ended_at"] = None
+        self.state["end_reason"] = None
+        self._save()
+
+    def mark_lifecycle(self, status: str, reason: str | None = None) -> None:
+        """Persist a non-destructive Campaign lifecycle transition."""
+        if status not in {"active", "completed", "interrupted", "abandoned"}:
+            raise ValueError("unsupported campaign lifecycle status")
+        if self.state.get("lifecycle_status") == status and self.state.get("end_reason") == reason:
+            return
+        self.state["lifecycle_status"] = status
+        terminal = status in {"completed", "interrupted", "abandoned"}
+        self.state["ended_at"] = datetime.now().isoformat(timespec="seconds") if terminal else None
+        self.state["end_reason"] = reason if terminal else None
+        self._save()
 
     def _ready_clip_count(self) -> int:
         count = 0
@@ -244,6 +272,10 @@ class CampaignBase:
         recorded = frames // self.video_segment_frames
         completed = self._ready_clip_count()
         return {
+            "campaign_id": self.state.get("run_id", self.root.name),
+            "scene": self.state.get("scene"),
+            "lifecycle_status": "completed" if self.is_complete else self.state.get("lifecycle_status", "active"),
+            "end_reason": "target_video_clips_reached" if self.is_complete else self.state.get("end_reason"),
             "campaign_dir": str(self.root),
             "frames_recorded": frames,
             "recorded_video_clips": recorded,

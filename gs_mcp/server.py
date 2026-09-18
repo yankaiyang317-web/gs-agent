@@ -152,6 +152,21 @@ def create_server(tools: EnvironmentTools, scene_runtime: Any | None = None, fas
             return tools.configure_campaign(video_clips, objective)
     else:
         @mcp.tool()
+        def gs_list_scenes() -> dict[str, Any]:
+            """List registered scenes. Safe before or during a task."""
+            return scene_runtime.list_scenes()
+
+        @mcp.tool()
+        def gs_describe_scene(scene: str) -> dict[str, Any]:
+            """Validate and summarize one scene without loading it."""
+            return scene_runtime.describe_scene(scene)
+
+        @mcp.tool()
+        def gs_get_runtime_status() -> dict[str, Any]:
+            """Return the current task stage. Call first in a new conversation."""
+            return scene_runtime.get_runtime_status()
+
+        @mcp.tool()
         def gs_configure_campaign(
             scene: str,
             video_clips: int,
@@ -162,7 +177,10 @@ def create_server(tools: EnvironmentTools, scene_runtime: Any | None = None, fas
             video_segment_frames: int | None = None,
             video_fps: float | None = None,
         ) -> dict[str, Any]:
-            """Start one HTTP Campaign with a server-side scene and runtime profile.
+            """Start one user-requested Campaign; call once at task start.
+
+            During an ACTIVE Campaign use task-execution tools instead. Repeating
+            the identical request is safe; an incompatible request is rejected.
 
             Development defaults to 960x720, 81 frames, and 9 FPS under
             outputs/exploration_runs. Demo defaults to 2560x1920, 270 frames,

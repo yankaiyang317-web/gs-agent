@@ -53,6 +53,12 @@ SceneRuntime + EnvironmentTools
 Structured tool result returned to the Agent
 ```
 
+## Lifecycle and tool stages
+
+The Harness reports `idle`, `active`, or `completed`. Discovery and status calls are safe in every state. Navigation tools require `active`; completed tasks reject additional movement. Repeating the identical active Campaign configuration is idempotent, while an incompatible unfinished request returns `ACTIVE_CAMPAIGN_CONFLICT` without deleting outputs or switching scenes.
+
+The persistent HTTP MCP exposes `gs_list_scenes`, `gs_describe_scene`, and `gs_get_runtime_status`. Destructive abandon or delete operations are not exposed to the exploration Agent.
+
 ## Lifecycle
 
 ### Persistent HTTP mode
@@ -133,15 +139,14 @@ assets remain external to Git but retain stable repository-relative paths.
 
 - No built-in model inference loop; the MCP client supplies the Agent.
 - Semantic routes and targets are proposed by the visual Agent.
-- The Harness implementation is distributed across modules.
+- The Harness is intentionally a thin lifecycle facade; detailed execution remains in focused modules.
 - Only one active scene/Campaign is owned by one persistent runtime.
 - Batch scheduling and concurrent Campaign ownership are not implemented.
 - Real-scene GPU validation remains separate from CPU-focused tests.
 
-## Proposed explicit Harness API
+## Explicit Harness API
 
-A future refactor can add `gs_mcp/harness.py` without changing the MCP tool
-contract:
+The persistent HTTP runtime now uses `gs_mcp/harness.py` while preserving the existing navigation tool contract:
 
 ```python
 class GSAgentHarness:
@@ -156,10 +161,9 @@ class GSAgentHarness:
     def finalize(self): ...
 ```
 
-The class would compose the existing runtime, environment tools, Campaign, and
-writer. `server.py` would remain a thin MCP adapter.
+The class composes the existing runtime, environment tools, Campaign, and writer. `server.py` remains a thin MCP adapter.
 
-## Refactor sequence
+## Follow-up refactor sequence
 
 1. Freeze the current MCP tool schemas with contract tests.
 2. Add a typed Harness configuration object.

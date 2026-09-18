@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from gs_mcp.harness import GSAgentHarness
 from gs_mcp.runtime import SceneRuntime
 from gs_mcp.server import create_server
 def main() -> None:
@@ -30,15 +31,16 @@ def main() -> None:
         max_navigation_actions=args.max_navigation_actions,
         blocked_retry_limit=args.blocked_retry_limit,
     )
+    harness = GSAgentHarness(runtime)
     try:
         server = create_server(
-            runtime.proxy,
-            scene_runtime=runtime,
+            harness.tools,
+            scene_runtime=harness,
             fastmcp_options={"host": args.host, "port": args.port},
         )
         server.run(transport="streamable-http")
     finally:
-        runtime.close()
+        harness.close()
 
 
 if __name__ == "__main__":
