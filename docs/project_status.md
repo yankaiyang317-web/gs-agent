@@ -37,8 +37,7 @@ Last updated: 2026-08-18
 - Exploration status includes a compact current-checkpoint/current-region
   summary (heading coverage and local candidate counts) without exposing the
   complete Campaign graph to the Agent.
-- Reproducible manifests exist for `jiudian`, `laojie`, `guju`, `bangongshi`,
-  `tiyuchang`, and `changguan`.
+- Scene manifests are deployment data; private validation scene names and assets are not enumerated in the public documentation.
 
 ## Runtime profiles
 
@@ -57,22 +56,7 @@ translation/rotation interpolation, turning speed, or collision behavior.
 ## Validation status
 
 - Windows CPU test suite: 94 tests passed on 2026-08-18.
-- The manifests and earlier runtime flows for `jiudian`, `laojie`, and `guju`
-  have been exercised. The latest open-space candidate-ranking behavior has
-  been observed in `jiudian`; it has not yet been behaviorally validated across
-  every scene and starting camera.
-- CUDA runtime smoke validation is separate from the CPU-focused test suite.
-- `tiyuchang` has a verified upright CUDA render, a free initial 1.4-unit
-  capsule, and six free 0.5-unit axis probes against its Coal mesh. Its
-  upper-unbounded 0.6-unit collision mesh has 7,274,476 triangles, loads in
-  about 43.7 seconds, and adds about 5.55 GiB peak resident memory in the
-  validation container. Only the below-scene side is cropped; tall structures
-  are retained.
-- `changguan` uses the manually selected SuperSplat camera in the filtered PLY's
-  native coordinates. Its standard 0.6-unit smooth collision mesh has 7,382,044
-  triangles. The initial 1.4-unit capsule and all six 0.5-unit axis probes are
-  free; a cold load took 48.343 seconds and about 5.51 GiB additional
-  peak resident memory on the validation host.
+- Real-scene CUDA, collision, and coverage validation is deployment-specific because large assets are not distributed with this repository.
 
 ## Current limitations and risks
 
@@ -93,11 +77,7 @@ translation/rotation interpolation, turning speed, or collision behavior.
   checked horizontal or minimally diagonal-up path. This capsule-clearance
   assist never auto-descends, does not model gravity, and does not affect
   vertical movement or depth-target approaches.
-- All maintained scenes use a 1.4 scene-unit analytic capsule and
-  0.02 swept-motion collision step. The runtime has no voxel fallback. `guju`
-  uses the longer capsule after moving its tree-canopy initial camera five
-  units downward along the configured `-world_up`, to `[0, -45, 0]`; the
-  original position intersected the longer body volume.
+- Camera capsule size and swept-motion collision step are declared per scene manifest and must be validated against each authorized collision asset.
 - `world_up` is inferred from the initial image. A sideways or upside-down
   source camera therefore produces a correspondingly tilted navigation frame.
 

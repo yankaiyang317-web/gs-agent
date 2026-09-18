@@ -11,7 +11,6 @@ Maintained current documentation:
 - [Scene manifests](scene-manifests.md)
 - [Development notes](development/README.md)
 - [Prompt system](prompt-system.md)
-- [Skill status and candidate design](skill-system.md)
 - [Agent Harness](harness.md)
 - [Agent integration guide](agent/README.md)
 - [Optional Agent task templates](agent/task_templates.md)

@@ -41,9 +41,9 @@ Example (the CLI installation path is deployment-specific):
 export SPLAT_TRANSFORM_NODE=/path/to/node
 export SPLAT_TRANSFORM_CLI=/path/to/splat-transform/bin/cli.mjs
 bash scripts/generate_collision_mesh.sh \
-  test_data/laojie/nl039zwl.ply \
-  test_data/laojie/collision_candidates/nl039zwl_v006 \
-  -0.76,-9.38,-23.68
+  test_data/my_scene/scene.ply \
+  test_data/my_scene/collision_candidates/scene_v001 \
+  0,0,0
 ```
 
 The omitted final argument defaults to `0.06`. Promote the generated GLB to a
@@ -77,25 +77,7 @@ An upright but strongly upward- or downward-looking image does not by itself
 identify physical gravity. Use manifest `world_up` or CLI `--world-up X Y Z`
 when the reconstruction's vertical direction is known independently.
 
-Current manifests:
-
-- `scenes/jiudian.json`
-- `scenes/laojie.json`
-- `scenes/guju.json`
-- `scenes/bangongshi.json`
-- `scenes/changguan.json`
-- `scenes/tiyuchang.json`
-
-`guju` uses explicit world-up `[0, -1, 0]`. Its initial quaternion is the
-manually rendered upright orientation; changing it to an X-axis half-turn
-puts the sky at the bottom of the image and also reverses navigation height.
-`tiyuchang` also uses `[0, -1, 0]`. Its 0.6-unit collision asset leaves the
-upward/negative-Y side unbounded so tall structures are retained, while only
-the below-scene side at renderer `y>-80` is removed before mesh generation.
-`changguan` uses `[0, -1, 0]` and a 0.6-unit standard smooth collision mesh.
-Its PLY is the reviewed `test.ply` export with six extreme outlier Gaussians
-removed; no height crop, floater filter, or cluster filter is applied to the
-promoted collision asset.
+Public documentation intentionally does not enumerate private validation scenes or assets. Keep deployment manifests beside authorized data, or publish redistributable sample assets in a separate dataset repository and link them from this project.
 
 The Windows launcher selects a scene from its first argument or the
 `GS_SCENE_MANIFEST` environment variable. Each runtime scene load creates an isolated
@@ -103,8 +85,6 @@ run under `outputs/exploration_runs/<manifest-file-name>/run_<timestamp>/`.
 
 Validate a manifest without loading the GPU renderer:
 
-```powershell
-D:\Users\yankaiyang\anaconda3\envs\gs-agent\python.exe -c "from gs_env import load_scene_manifest; print(load_scene_manifest('scenes/laojie.json'))"
+```bash
+python -c "from gs_env import load_scene_manifest; print(load_scene_manifest('scenes/my_scene.json'))"
 ```
-
-The Python path above is a local development example, not a portable deployment command.

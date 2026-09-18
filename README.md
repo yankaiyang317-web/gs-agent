@@ -19,12 +19,11 @@ The project is installed as a normal Python environment. Docker is not required.
 - Persist Campaign state, observations, trajectories, and video clips.
 - Run as a local stdio MCP process or a persistent Streamable HTTP service.
 
-## Agent system: Prompt, Skill, and Harness
+## Agent system: Prompt and Harness
 
 | Concept | Current status | Documentation |
 | --- | --- | --- |
 | Prompt | Implemented through `AGENTS.md`, task templates, and MCP tool descriptions. | [Prompt system](docs/prompt-system.md) |
-| Skill | Reusable workflows exist, but no formal `SKILL.md` package is enabled yet. | [Skill status](docs/skill-system.md) |
 | Harness | Explicit `GSAgentHarness` lifecycle boundary over the runtime, Campaign, tools, and persistence. | [Harness architecture](docs/harness.md) |
 
 The model loop is hosted by an MCP client such as Codex. gs-agent provides the
@@ -92,33 +91,17 @@ the scene manifest. The maintained layout is:
 ```text
 gs-agent/
 |-- scenes/
-|   |-- guju.json
+|   |-- my_scene.json
 |   `-- ...
 |-- test_data/                 # ignored by Git
-|   |-- guju/
-|   |   |-- 1lpn0524.ply
-|   |   `-- 1lpn0524_v006.collision.glb
+|   |-- my_scene/
+|   |   |-- scene.ply
+|   |   `-- scene.collision.glb
 |   `-- ...
 `-- outputs/                  # ignored by Git
 ```
 
-The included manifests expect these files:
-
-| Scene | Gaussian PLY | Collision GLB |
-| --- | --- | --- |
-| `bangongshi` | `test_data/bangongshi/65b88b72a3604a2180248f1f666d1b30.ply` | `test_data/bangongshi/65b88b72a3604a2180248f1f666d1b30_v004.collision.glb` |
-| `changguan` | `test_data/changguan/changguan.ply` | `test_data/changguan/changguan_v060.collision.glb` |
-| `guju` | `test_data/guju/1lpn0524.ply` | `test_data/guju/1lpn0524_v006.collision.glb` |
-| `jiudian` | `test_data/jiudian/y253p58x.ply` | `test_data/jiudian/y253p58x.collision.glb` |
-| `laojie` | `test_data/laojie/nl039zwl.ply` | `test_data/laojie/nl039zwl_v006.collision.glb` |
-| `tiyuchang` | `test_data/tiyuchang/35162acf9e5143dbaa997e8501057520.ply` | `test_data/tiyuchang/35162acf9e5143dbaa997e8501057520_v060_top_unbounded.collision.glb` |
-
-On another authorized machine, the current private assets can be copied from a
-data host without adding them to Git:
-
-```bash
-rsync -av --progress render-host:/path/to/gs-agent/test_data/ ./test_data/
-```
+The repository does not distribute or enumerate private scene assets. Provide your own aligned PLY and collision GLB, or link to a separately licensed dataset repository.
 
 ## 4. Define and initialize a scene
 
@@ -168,20 +151,20 @@ and the initial capsule is collision-free.
 Validate path resolution without rendering:
 
 ```bash
-python -c "from gs_env import load_scene_manifest; print(load_scene_manifest('scenes/guju.json'))"
+python -c "from gs_env import load_scene_manifest; print(load_scene_manifest('scenes/my_scene.json'))"
 ```
 
 On Linux, run the environment preflight:
 
 ```bash
-bash scripts/preflight_linux.sh scenes/guju.json
+bash scripts/preflight_linux.sh scenes/my_scene.json
 ```
 
 Then perform one real GPU render:
 
 ```bash
 python scripts/smoke/test_manifest_render.py \
-  --scene-manifest scenes/guju.json \
+  --scene-manifest scenes/my_scene.json \
   --out outputs/server_smoke
 ```
 
@@ -204,7 +187,7 @@ args = [
   "-m",
   "gs_mcp.server",
   "--scene-manifest",
-  "/absolute/path/to/gs-agent/scenes/guju.json",
+  "/absolute/path/to/gs-agent/scenes/my_scene.json",
   "--exploration-campaign",
   "/absolute/path/to/gs-agent/outputs/exploration_runs",
 ]
@@ -223,6 +206,8 @@ gs_configure_campaign(video_clips=1, objective="coverage")
 Use HTTP when the renderer should remain alive independently of the client or
 runs on another host:
 
+`18913` is only the application default, not an MCP requirement. Replace `<PORT>` with any available port and use the same value in the server command and client URL.
+
 ```bash
 python -m gs_mcp.runtime_server \
   --scenes-root ./scenes \
@@ -230,28 +215,28 @@ python -m gs_mcp.runtime_server \
   --demo-runs-root ./outputs/demo_runs \
   --device cuda \
   --host 127.0.0.1 \
-  --port 18913
+  --port <PORT>
 ```
 
 Configure the MCP client:
 
 ```toml
 [mcp_servers.gs_agent]
-url = "http://127.0.0.1:18913/mcp"
+url = "http://127.0.0.1:<PORT>/mcp"
 startup_timeout_sec = 300
 ```
 
 For a remote loopback-only server, route the connection separately:
 
 ```bash
-ssh -N -L 18913:127.0.0.1:18913 user@render-host
+ssh -N -L <LOCAL_PORT>:127.0.0.1:<SERVER_PORT> user@render-host
 ```
 
 The MCP configuration remains unchanged. Start an HTTP Campaign with:
 
 ```text
 gs_configure_campaign(
-    scene="guju",
+    scene="my_scene",
     video_clips=1,
     objective="coverage",
     profile="development",

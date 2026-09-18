@@ -16,7 +16,7 @@ args = [
   "-m",
   "gs_mcp.server",
   "--scene-manifest",
-  "/absolute/path/to/gs-agent/scenes/guju.json",
+  "/absolute/path/to/gs-agent/scenes/my_scene.json",
   "--exploration-campaign",
   "/absolute/path/to/gs-agent/outputs/exploration_runs",
 ]
@@ -41,6 +41,8 @@ on another host.
 
 Start the server:
 
+The port is configurable. `18913` is the application default, not an MCP requirement. Replace `<PORT>` below with any available port and use the same value in the client URL.
+
 ```bash
 python -m gs_mcp.runtime_server \
   --scenes-root ./scenes \
@@ -48,14 +50,14 @@ python -m gs_mcp.runtime_server \
   --demo-runs-root ./outputs/demo_runs \
   --device cuda \
   --host 127.0.0.1 \
-  --port 18913
+  --port <PORT>
 ```
 
 Configure the client:
 
 ```toml
 [mcp_servers.gs_agent]
-url = "http://127.0.0.1:18913/mcp"
+url = "http://127.0.0.1:<PORT>/mcp"
 startup_timeout_sec = 300
 ```
 
@@ -67,11 +69,10 @@ Network routing is separate from MCP configuration. Prefer keeping the service
 on loopback and forwarding it over an authenticated SSH connection:
 
 ```bash
-ssh -N -L 18913:127.0.0.1:18913 user@render-host
+ssh -N -L <LOCAL_PORT>:127.0.0.1:<SERVER_PORT> user@render-host
 ```
 
-The client still connects to `http://127.0.0.1:18913/mcp`. Substitute any
-authorized server name.
+The client connects to `http://127.0.0.1:<LOCAL_PORT>/mcp`. The local forwarding port may differ from the server port; use the local port in the MCP URL.
 
 ## Start a task
 
@@ -79,7 +80,7 @@ The persistent HTTP runtime starts without a scene. First call:
 
 ```text
 gs_configure_campaign(
-    scene="guju",
+    scene="my_scene",
     video_clips=1,
     objective="coverage",
     profile="development",

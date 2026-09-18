@@ -53,11 +53,11 @@ declared by the JSON files under `scenes/`. For example:
 ```text
 gs-agent/
 |-- scenes/
-|   `-- guju.json
+|   `-- my_scene.json
 `-- test_data/
-    `-- guju/
-        |-- 1lpn0524.ply
-        `-- 1lpn0524_v006.collision.glb
+    `-- my_scene/
+        |-- scene.ply
+        `-- scene.collision.glb
 ```
 
 ## Validate
@@ -72,6 +72,6 @@ Real-scene and GPU checks are separate:
 
 ```bash
 python scripts/smoke/test_manifest_render.py \
-  --scene-manifest scenes/guju.json \
+  --scene-manifest scenes/my_scene.json \
   --out outputs/server_smoke
 ```
