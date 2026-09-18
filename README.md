@@ -19,6 +19,19 @@ The project is installed as a normal Python environment. Docker is not required.
 - Persist Campaign state, observations, trajectories, and video clips.
 - Run as a local stdio MCP process or a persistent Streamable HTTP service.
 
+## Agent system: Prompt, Skill, and Harness
+
+| Concept | Current status | Documentation |
+| --- | --- | --- |
+| Prompt | Implemented through `AGENTS.md`, task templates, and MCP tool descriptions. | [Prompt system](docs/prompt-system.md) |
+| Skill | Reusable workflows exist, but no formal `SKILL.md` package is enabled yet. | [Skill status](docs/skill-system.md) |
+| Harness | Implemented across the MCP runtime, environment tools, Campaign state, safety checks, persistence, and tests. | [Harness architecture](docs/harness.md) |
+
+The model loop is hosted by an MCP client such as Codex. gs-agent provides the
+environment-side Harness: it exposes observations and actions, validates tool
+calls, applies collision and navigation guards, maintains exploration state,
+and records reproducible outputs.
+
 ## 1. Requirements
 
 For real 3DGS scenes:
