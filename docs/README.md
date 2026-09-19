@@ -4,6 +4,7 @@ Maintained current documentation:
 
 - [Installation](installation.md)
 - [Generic MCP connection guide](mcp-connection.md)
+- [MCP tool reference](mcp-tools.md)
 - [Current project status](project_status.md)
 - [Architecture](architecture.md)
 - [Navigation controls](navigation-controls.md)

@@ -30,6 +30,17 @@ environment-side Harness: it exposes observations and actions, validates tool
 calls, applies collision and navigation guards, maintains exploration state,
 and records reproducible outputs.
 
+## MCP tools
+
+The persistent HTTP service exposes a stable MCP surface:
+
+- Discovery and start: `gs_list_scenes`, `gs_describe_scene`, `gs_get_runtime_status`, `gs_configure_campaign`.
+- Observation and navigation: `gs_observe`, `gs_get_pose`, `gs_move`, `gs_rotate`, `gs_approach_target`.
+- Exploration: `gs_report_exploration_candidates`, `gs_get_exploration_status`, `gs_restore_checkpoint`, `gs_record_finding`.
+- Debug: `gs_set_pose` (direct teleport; not collision checked).
+
+Connected Agents receive tool schemas and descriptions automatically; they do not need to read the source code. See the [complete MCP tool reference](docs/mcp-tools.md) for parameters, lifecycle states, mode availability, and results.
+
 ## 1. Requirements
 
 For real 3DGS scenes:
