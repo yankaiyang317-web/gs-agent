@@ -38,6 +38,9 @@ the defaults.
 - `gs_get_exploration_status()` returns global topology counts, a compact
   current-checkpoint/current-region summary (heading and local candidate
   coverage), repetition, and a recommended local action or backtrack path.
+  Its `campaign` object is the authoritative completion receipt: it includes
+  frame and clip progress, `complete`, the Campaign directory, and
+  `completed_video_paths` for MP4 files that are present and non-empty.
 - `gs_restore_checkpoint(checkpoint_id, reason="")` restores only a persisted
   checkpoint, and only at a clip boundary or during repetition/collision recovery.
 - `gs_get_pose` reads pose; `gs_set_pose` is debug/MVP-only direct placement.

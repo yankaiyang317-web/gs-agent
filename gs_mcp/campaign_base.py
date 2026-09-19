@@ -271,6 +271,10 @@ class CampaignBase:
         target = self.state.get("target_video_clips")
         recorded = frames // self.video_segment_frames
         completed = self._ready_clip_count()
+        completed_video_paths = [
+            str(self.root / "video" / f"clip_{clip_index:03d}.mp4")
+            for clip_index in range(completed)
+        ]
         return {
             "campaign_id": self.state.get("run_id", self.root.name),
             "scene": self.state.get("scene"),
@@ -280,6 +284,7 @@ class CampaignBase:
             "frames_recorded": frames,
             "recorded_video_clips": recorded,
             "completed_video_clips": completed,
+            "completed_video_paths": completed_video_paths,
             "target_video_clips": target,
             "target_frames": self.target_frames,
             "video_segment_frames": self.video_segment_frames,

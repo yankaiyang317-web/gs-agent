@@ -219,7 +219,7 @@ def create_server(tools: EnvironmentTools, scene_runtime: Any | None = None, fas
 
     @mcp.tool()
     def gs_get_exploration_status() -> dict[str, Any]:
-        """Return topology coverage, repetition detection, and the next recommendation."""
+        """Return exploration guidance plus authoritative Campaign completion status."""
         return tools.get_exploration_status()
 
     @mcp.tool()

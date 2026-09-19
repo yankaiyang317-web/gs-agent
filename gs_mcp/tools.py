@@ -246,7 +246,9 @@ class EnvironmentTools:
     def get_exploration_status(self) -> dict[str, Any]:
         if self.campaign is None:
             raise RuntimeError("exploration status requires an exploration campaign")
-        return self.campaign.exploration_status()
+        result = self.campaign.exploration_status()
+        result["campaign"] = self.campaign.status()
+        return result
 
     def restore_checkpoint(self, checkpoint_id: int, reason: str = "") -> dict[str, Any]:
         """Restore only a persisted pose, at a clip boundary or during recovery."""

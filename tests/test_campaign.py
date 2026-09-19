@@ -77,6 +77,10 @@ class CampaignTests(unittest.TestCase):
             self.assertTrue(campaign.is_complete)
             self.assertEqual(campaign.status()["recorded_video_clips"], 1)
             self.assertEqual(campaign.status()["completed_video_clips"], 1)
+            self.assertEqual(
+                campaign.status()["completed_video_paths"],
+                [str(root / "campaign" / "video" / "clip_000.mp4")],
+            )
             self.assertTrue((root / "campaign" / "rgb" / "000080.png").is_file())
             export.assert_called_once_with(root / "campaign", 0, fps=9.0, max_frames=81)
 

@@ -251,7 +251,11 @@ class MCPToolsTests(unittest.TestCase):
                 route_frontiers=[{"pixel": [1, 1], "kind": "doorway", "reason": "visible opening"}],
             )
             self.assertEqual(result["route_frontiers"][0]["status"], "untried")
-            self.assertEqual(tools.get_exploration_status()["suggested_action"], "explore_route_frontier")
+            status = tools.get_exploration_status()
+            self.assertEqual(status["suggested_action"], "explore_route_frontier")
+            self.assertEqual(status["campaign"]["frames_recorded"], 0)
+            self.assertFalse(status["campaign"]["complete"])
+            self.assertEqual(status["campaign"]["completed_video_paths"], [])
             with self.assertRaises(ValueError):
                 tools.report_exploration_candidates(route_frontiers=[{"pixel": [5, 1]}])
 
