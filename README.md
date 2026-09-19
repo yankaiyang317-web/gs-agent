@@ -5,7 +5,6 @@ through the Model Context Protocol (MCP). It provides RGB/depth observations,
 horizon-stable 6DoF navigation, mesh-capsule collision checks, visible-target
 approach, coverage memory, campaign persistence, and video recording.
 
-The project is installed as a normal Python environment. Docker is not required.
 
 ## Capabilities
 
