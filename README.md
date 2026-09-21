@@ -95,6 +95,11 @@ A runnable scene needs two aligned assets:
 1. A canonical 3DGS `.ply` containing the Gaussian properties required by gsplat.
 2. A static triangle `.collision.glb` aligned to the PLY coordinate system.
 
+The collision GLB can be generated from the same 3DGS PLY with
+[`splat-transform`](https://github.com/playcanvas/splat-transform). Use the
+provided [`scripts/generate_collision_mesh.sh`](scripts/generate_collision_mesh.sh)
+wrapper and verify alignment before referencing the GLB in a scene manifest.
+
 Keep large assets outside Git but place or link them at the paths declared by
 the scene manifest. The maintained layout is:
 
