@@ -19,18 +19,6 @@ development utilities; they are not required package entrypoints.
 bash scripts/preflight_linux.sh scenes/guju.json
 ```
 
-## Local Windows MCP launcher
-
-`run_windows_mcp.cmd` starts the stdio MCP server with a selected manifest.
-Pass the manifest as the first argument or set `GS_SCENE_MANIFEST`:
-
-```cmd
-scripts\run_windows_mcp.cmd scenes\guju.json
-```
-
-For client configuration and the persistent HTTP command, see
-`docs/mcp-connection.md`.
-
 ## Real-scene and GPU smoke checks
 
 `smoke/` contains focused validation scripts for manifest rendering, camera

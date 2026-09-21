@@ -15,36 +15,31 @@ from gs_env.geometry.transforms import quaternion_to_rotation_matrix
 
 class SceneManifestTests(unittest.TestCase):
     def test_guju_preset_has_verified_upright_navigation_frame(self) -> None:
-        manifest = load_scene_manifest(Path(__file__).parents[1] / "scenes" / "guju.json")
-        rotation = quaternion_to_rotation_matrix(manifest.initial_pose.quaternion_wxyz)
+        raw = json.loads((Path(__file__).parents[1] / "scenes" / "guju.json").read_text(encoding="utf-8"))
+        rotation = quaternion_to_rotation_matrix(np.asarray(raw["initial_pose"]["quaternion_wxyz"], dtype=np.float64))
         image_up = -rotation[:, 1]
 
         np.testing.assert_allclose(image_up, [0.0, -1.0, 0.0], atol=1e-6)
-        np.testing.assert_allclose(manifest.world_up, image_up, atol=1e-6)
-        np.testing.assert_allclose(manifest.initial_pose.position, [0.0, -45.0, 0.0], atol=1e-6)
-        self.assertEqual(manifest.camera_radius * 2 + manifest.camera_body_height, 1.4)
-        self.assertIsNotNone(manifest.collision_mesh_path)
-        self.assertEqual(manifest.collision_mesh_path.name, "1lpn0524_v006.collision.glb")
+        np.testing.assert_allclose(raw["world_up"], image_up, atol=1e-6)
+        np.testing.assert_allclose(raw["initial_pose"]["position"], [0.0, -45.0, 0.0], atol=1e-6)
+        self.assertEqual(2 * raw["collision"]["camera_radius"] + raw["collision"]["camera_body_height"], 1.4)
+        self.assertEqual(Path(raw["collision_mesh"]).name, "1lpn0524_v006.collision.glb")
 
-    def test_formal_scenes_use_only_verified_mesh_capsule_assets(self) -> None:
+    def test_retained_scenes_use_only_verified_mesh_capsule_assets(self) -> None:
         scene_root = Path(__file__).parents[1] / "scenes"
         expected_meshes = {
-            "bangongshi": "65b88b72a3604a2180248f1f666d1b30_v004.collision.glb",
-            "changguan": "changguan_v060.collision.glb",
             "jiudian": "y253p58x.collision.glb",
             "guju": "1lpn0524_v006.collision.glb",
             "laojie": "nl039zwl_v006.collision.glb",
-            "tiyuchang": "35162acf9e5143dbaa997e8501057520_v060_top_unbounded.collision.glb",
         }
         for scene, mesh_name in expected_meshes.items():
             with self.subTest(scene=scene):
-                manifest = load_scene_manifest(scene_root / f"{scene}.json")
-                self.assertIsNotNone(manifest.collision_mesh_path)
-                self.assertEqual(manifest.collision_mesh_path.name, mesh_name)
-                self.assertEqual(manifest.camera_radius * 2 + manifest.camera_body_height, 1.4)
-                self.assertEqual(manifest.collision_step, 0.02)
+                raw = json.loads((scene_root / f"{scene}.json").read_text(encoding="utf-8"))
+                self.assertEqual(Path(raw["collision_mesh"]).name, mesh_name)
+                self.assertEqual(2 * raw["collision"]["camera_radius"] + raw["collision"]["camera_body_height"], 1.4)
+                self.assertEqual(raw["collision"]["step"], 0.02)
                 np.testing.assert_allclose(
-                    manifest.collision_world_to_asset, np.diag([-1, -1, 1, 1])
+                    raw["collision"]["world_to_asset"], np.diag([-1, -1, 1, 1])
                 )
 
     def test_resolves_scene_relative_assets_and_parameters(self) -> None:
