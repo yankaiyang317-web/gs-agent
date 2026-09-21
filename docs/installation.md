@@ -10,6 +10,16 @@ deployment chooses to use it.
 - A CUDA-enabled PyTorch build compatible with the machine.
 - FFmpeg when campaign videos need to be exported.
 
+Real-scene GPU rendering and collision checking are currently verified on
+Linux. Windows environment setup and MCP configuration are documented, but the
+complete real-scene runtime has not been verified there.
+
+## Tested environment
+
+One verified configuration is Ubuntu 24.04, Python 3.11.15, an NVIDIA L40 with
+driver 590.44.01, PyTorch 2.5.1+cu121, CUDA Toolkit 12.0, and gsplat 1.5.3.
+This is a reference configuration, not a strict requirement.
+
 ## Create an environment
 
 Linux:
@@ -34,6 +44,9 @@ repository:
 ```bash
 pip install -e .
 ```
+
+If `gsplat` builds CUDA extensions locally, a compatible CUDA Toolkit (`nvcc`)
+and C/C++ compiler are also required.
 
 Install the development extra when tests will be run:
 

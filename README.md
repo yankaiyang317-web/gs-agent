@@ -53,6 +53,10 @@ For real 3DGS scenes:
 - FFmpeg with `libx264` when exporting MP4 files.
 - A Gaussian Splatting PLY file and a matching static collision GLB per scene.
 
+Real-scene rendering and collision-aware navigation are currently verified on
+Linux. See the [installation guide](docs/installation.md) for the tested
+environment; other compatible configurations may also work.
+
 The repository does not include the multi-gigabyte real scene assets. It only
 contains `tests/fixtures/smoke_scene.ply`, a tiny fixture for automated tests.
 
